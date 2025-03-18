@@ -41,6 +41,13 @@ class Graph {
   std::unordered_map<typename Edge::VertexT, std::vector<Edge>> edges_;
 };
 
-#include "../src/Graph.cpp"
+template<typename Edge>
+requires IsEdge<Edge, typename Edge::VertexT>
+Graph<Edge>::Graph(std::span<const Edge> edges) {
+  for (const auto& [source, target] : edges) {
+    edges_[source].emplace_back(source, target);
+    edges_[target].emplace_back(target, source);
+  }
+}
 
 #endif //BFSSHORTESTPATH_GRAPH_HPP_
